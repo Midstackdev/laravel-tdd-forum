@@ -61,4 +61,16 @@ class ThreadsTest extends TestCase
 
         $this->assertInstanceOf('App\Models\Channel', $thread->channel); 
     }
+
+    /** @test */
+    public function a_user_can_filter_threads_according_to_channel()
+    {
+        $channel = create('App\Models\Channel');
+        $threadInChannel = create('App\Models\Thread', ['channel_id' => $channel->id]);
+        $threadNotInChannel = create('App\Models\Thread');
+
+        $this->get('/threads/' .$channel->slug)
+            ->assertSee($threadInChannel->title)
+            ->assertDontSee($threadNotInChannel->title); 
+    }
 }

@@ -37,4 +37,17 @@ class ParticipatesInForumTest extends TestCase
         $this->post('/threads/some-channel/1/replies', [])
                 ->assertRedirect('/login');
     }
+
+    /** @test */
+    public function q_reply_requires_a_body()
+    {
+        
+        $this->signIn();
+
+        $thread = create('App\Models\Thread');
+
+        $reply = make('App\Models\Reply', ['body' => null ]);
+        $this->post($thread->path(). '/replies', $reply->toArray())
+                ->assertSessionHasErrors('body');
+    }
 }
