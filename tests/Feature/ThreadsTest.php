@@ -40,7 +40,7 @@ class ThreadsTest extends TestCase
     public function a_user_can_see_a_specific_thread()
     {
 
-        $response = $this->get('/threads/' .$this->thread->id);
+        $response = $this->get($this->thread->path());
 
         $response->assertSee($this->thread->title);
     }
@@ -50,7 +50,15 @@ class ThreadsTest extends TestCase
     {
         $reply = factory('App\Models\Reply')->create(['thread_id' => $this->thread->id]);
 
-        $this->get('/threads/' .$this-> thread->id)
+        $this->get($this->thread->path())
             ->assertSee($reply->body);
+    }
+
+    /** @test */
+    public function a_thread_belongs_to_a_channel()
+    {
+        $thread = create('App\Models\Thread');
+
+        $this->assertInstanceOf('App\Models\Channel', $thread->channel); 
     }
 }

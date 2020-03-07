@@ -19,7 +19,7 @@ class ParticipatesInForumTest extends TestCase
         $thread = factory('App\Models\Thread')->create();
 
         $reply = factory('App\Models\Reply')->make();
-        $this->post('/threads/' .$thread->id. '/replies', $reply->toArray());
+        $this->post($thread->path(). '/replies', $reply->toArray());
 
         $this->get($thread->path())->assertSee($reply->body);
     }
@@ -28,12 +28,13 @@ class ParticipatesInForumTest extends TestCase
     public function unauthenticated_users_can_not_participate_in_forum_threads()
     {
         
-        $this->expectException('Illuminate\Auth\AuthenticationException');
+        $this->withoutExceptionHandling()->expectException('Illuminate\Auth\AuthenticationException');
 
         // $thread = factory('App\Models\Thread')->create();
 
         // $reply = factory('App\Models\Reply')->make();
         // $this->post($thread->path(). '/replies', $reply->toArray());
-        $this->post('/threads/1/replies', []);
+        $this->post('/threads/some-channel/1/replies', [])
+                ->assertRedirect('/login');
     }
 }
