@@ -73,4 +73,34 @@ class ThreadsTest extends TestCase
             ->assertSee($threadInChannel->title)
             ->assertDontSee($threadNotInChannel->title); 
     }
+
+    /** @test */
+    public function a_user_can_filter_threads_by_username()
+    {
+        $this->signIn(create('App\Models\User', ['name' => 'JohnDoe']));
+
+        $threadByJohn = create('App\Models\Thread', ['user_id' => auth()->id()]);
+        $threadNotByJohn = create('App\Models\Thread');
+
+        $this->get('threads?by=JohnDoe')
+            ->assertSee($threadByJohn->title)
+            ->assertDontSee($threadNotByJohn->title);
+    }
+
+    /** @test */
+    public function a_user_can_filter_threads_by_popularity()
+    {
+
+        $threadWithTwoReplies = create('App\Models\Thread');
+        create('App\Models\Reply', ['thread_id' => $threadWithTwoReplies->id], 2);
+
+        $threadWithThreeReplies = create('App\Models\Thread');
+        create('App\Models\Reply', ['thread_id' => $threadWithThreeReplies->id], 3);
+
+        $threadWithNoReply = $this->thread;
+
+        $response = $this->getJson('threads?popular=1')->json();
+
+        $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
+    }
 }

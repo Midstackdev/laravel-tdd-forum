@@ -18,6 +18,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        body { padding-bottom: 100px; }
+        .level { display: flex; align-items: center; }
+        .flex { flex: 1; }
+    </style>
 </head>
 <body style="padding-bottom: 100px;">
     <div id="app">
@@ -33,9 +38,28 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/threads">{{ __('All thread') }}</a>
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                Browse <span class="caret"></span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/threads">
+                                    {{ __('All threads') }}
+                                </a>
+                                @if(auth()->check())
+                                    <a class="dropdown-item" href="/threads?by={{ auth()->user()->name }}">
+                                        {{ __('My threads') }}
+                                    </a>
+                                @endif
+                                <a class="dropdown-item" href="/threads?popular=1">
+                                    {{ __('Popular threads') }}
+                                </a>
+                            </div>
                         </li>
+                        {{-- <li class="nav-item">
+                            <a class="nav-link" href="/threads">{{ __('All thread') }}</a>
+                        </li> --}}
                         <li class="nav-item">
                             <a class="nav-link" href="/threads/create">{{ __('New thread') }}</a>
                         </li>
