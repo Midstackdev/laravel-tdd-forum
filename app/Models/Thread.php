@@ -8,6 +8,8 @@ class Thread extends Model
 {
     protected $guarded = [];
 
+    protected $with = ['creator', 'channel'];
+
     public static function boot()
     {
         parent::boot();
@@ -25,6 +27,8 @@ class Thread extends Model
     public function replies()
     {
     	return $this->hasMany(Reply::class);
+                    // ->withCount('favourites')
+                    // ->with('owner');
     }
 
     public function creator()
@@ -39,7 +43,7 @@ class Thread extends Model
 
     public function getRepliesCountAttribute()
     {
-        return $this->replies()->count();
+        return $this->replies->count();
     }
 
     public function channel()
