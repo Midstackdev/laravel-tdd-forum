@@ -1,0 +1,19 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
+
+class ProfilesTest extends TestCase
+{
+    use DatabaseMigrations;
+
+    /** @test */
+    public function a_guest_can_not_favourite_a_anything()
+    {
+        $this->post('replies/1/favourites')
+            ->assertRedirect('/login');
+    }
+
+}
