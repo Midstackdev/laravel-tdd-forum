@@ -30,6 +30,8 @@
 
         <main class="py-4">
             @yield('content')
+
+            <flash-message message="{{ session('flash') }}"></flash-message>
         </main>
     </div>
 </body>
