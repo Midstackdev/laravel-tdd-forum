@@ -39,7 +39,7 @@ class ParticipatesInForumTest extends TestCase
     }
 
     /** @test */
-    public function q_reply_requires_a_body()
+    public function a_reply_requires_a_body()
     {
         
         $this->signIn();
@@ -49,5 +49,56 @@ class ParticipatesInForumTest extends TestCase
         $reply = make('App\Models\Reply', ['body' => null ]);
         $this->post($thread->path(). '/replies', $reply->toArray())
                 ->assertSessionHasErrors('body');
+    }
+
+    /** @test */
+    public function unauthorized_users_cannot_delete_replies()
+    {
+        $reply = create('App\Models\Reply');
+
+        $this->delete("/replies/{$reply->id}")
+            ->assertRedirect('/login');
+
+        $this->signIn()
+            ->delete("/replies/{$reply->id}")
+            ->assertStatus(403);
+    }
+
+
+    /** @test */
+    public function authorized_users_can_delete_replies()
+    {
+        $this->signIn();
+
+        $reply = create('App\Models\Reply', ['user_id' => auth()->id()]);
+
+        $this->delete("/replies/{$reply->id}")->assertStatus(302);
+
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+    }
+
+    /** @test */
+    public function unauthorized_users_cannot_update_replies()
+    {
+        $reply = create('App\Models\Reply');
+
+        $this->patch("/replies/{$reply->id}")
+            ->assertRedirect('/login');
+
+        $this->signIn()
+            ->patch("/replies/{$reply->id}")
+            ->assertStatus(403);
+    }
+    /** @test */
+    public function authorized_users_can_update_replies()
+    {
+        $this->signIn();
+
+        $reply = create('App\Models\Reply', ['user_id' => auth()->id()]);
+
+        $updatedReply = 'You changed sucker.';
+        $this->patch("/replies/{$reply->id}", ['body' => $updatedReply]);
+
+        $this->assertDatabaseHas('replies', ['id' => $reply->id, 'body' => $updatedReply]);
     }
 }

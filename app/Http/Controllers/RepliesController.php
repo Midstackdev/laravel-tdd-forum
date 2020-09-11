@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Http\Request;
 
@@ -24,5 +25,20 @@ class RepliesController extends Controller
     	]);
 
     	return back();
+    }
+
+    public function update(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+        $reply->update(request(['body']));
+    }
+
+    public function destroy(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+
+        $reply->delete();
+
+        return back();
     }
 }
