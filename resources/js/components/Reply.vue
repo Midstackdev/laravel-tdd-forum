@@ -4,7 +4,7 @@
             <div class="level">
                 <h5 class="flex">
                     <a :href="`/profiles/${data.owner.name}`" v-text="data.owner.name"></a> said
-                    {{ data.created_at }}...
+                    <span v-text="ago"></span>
                 </h5>
 
                 <div v-if="authenticated">
@@ -33,6 +33,8 @@
 </template>
 <script>
     import Favourite from './Favourite'
+    import moment from 'moment'
+
     export default {
         props: ['data'],
         components: {
@@ -47,6 +49,10 @@
         },
 
         computed: {
+            ago() {
+                return moment(this.data.created_at).fromNow() + '...'
+            },
+
             authenticated() {
                 return window.App.user.authenticated
             },
@@ -73,10 +79,6 @@
                 this.$emit('deleted', this.data.id)
 
             }
-        },
-
-        mounted () {
-            console.log(window.App.user.data.id)
         }
     }
 </script>
