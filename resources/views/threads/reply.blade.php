@@ -7,14 +7,11 @@
 					{{ $reply->created_at->diffForHumans() }}
 				</h5>
 
-				<div>
-					<form method="post" action="/replies/{{ $reply->id }}/favourites">
-						@csrf
-						<button type="submit" class="btn btn-primary" {{ $reply->isFavourited() ? 'disabled' : '' }}>
-							{{ $reply->favourites_count }} {{Str::plural('Favourite', $reply->favourites_count )}}
-						</button>
-					</form>
-				</div>
+				@if(auth()->check())
+					<div>
+						<favourite :reply="{{ $reply }}"></favourite>
+					</div>
+				@endif
 			</div>	
 			
 		</div>
@@ -32,11 +29,7 @@
 		@can('update', $reply)
 			<div class="card-footer text-muted level">
 				<button class="btn btn-light btn-sm mr-1" type="button" @click="editing = true">Edit</button>
-			    <form action="/replies/{{ $reply->id }}" method="POST">
-			        @csrf
-			        @method('delete')
-			        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
-			    </form>
+				<button class="btn btn-danger btn-sm mr-1" type="button" @click="destroy">Delete</button>
 			</div>
 		@endcan
 	</div>
