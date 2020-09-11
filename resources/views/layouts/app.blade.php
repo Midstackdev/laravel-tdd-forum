@@ -35,5 +35,15 @@
             <flash-message message="{{ session('flash') }}"></flash-message>
         </main>
     </div>
+
+    <script>
+        window.App = {!! json_encode([
+            'user' => [
+                'authenticated' => auth()->check(),
+                'data' => auth()->user() ?? '',
+                'id' => optional(auth()->user())->id ?? '',
+            ],
+        ]) !!}
+    </script>
 </body>
 </html>

@@ -22,6 +22,7 @@ window.Vue = require('vue');
 Vue.component('reply', require('./components/Reply.vue').default);
 Vue.component('favourite', require('./components/Favourite.vue').default);
 Vue.component('flash-message', require('./components/FlashMessage.vue').default);
+Vue.component('thread-view', require('./pages/Thread.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
