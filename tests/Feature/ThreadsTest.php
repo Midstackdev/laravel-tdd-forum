@@ -46,13 +46,13 @@ class ThreadsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_read_replies_associated_with_a_thread()
-    {
-        $reply = factory('App\Models\Reply')->create(['thread_id' => $this->thread->id]);
+    // public function a_user_can_read_replies_associated_with_a_thread()
+    // {
+    //     $reply = factory('App\Models\Reply')->create(['thread_id' => $this->thread->id]);
 
-        $this->get($this->thread->path())
-            ->assertSee($reply->body);
-    }
+    //     $this->get($this->thread->path())
+    //         ->assertSee($reply->body);
+    // }
 
     /** @test */
     public function a_thread_belongs_to_a_channel()
@@ -103,4 +103,18 @@ class ThreadsTest extends TestCase
 
         $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
     }
+
+    /** @test */
+    public function a_user_can_request_all_replies_for_a_given_thread()
+    {
+        $thread = create('App\Models\Thread');
+        create('App\Models\Reply', ['thread_id' => $thread->id], 2); 
+
+        $response = $this->getJson($thread->path() . '/replies')->json();
+
+        $this->assertCount(2, $response['data']);  
+        $this->assertEquals(2, $response['total']);  
+    }
+
+
 }
