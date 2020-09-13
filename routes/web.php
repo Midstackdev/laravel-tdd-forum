@@ -31,6 +31,10 @@ Route::get('/threads/{channel}/{thread}/replies', 'RepliesController@index');
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::patch('/replies/{reply}', 'RepliesController@update');
 Route::delete('/replies/{reply}', 'RepliesController@destroy');
+
+Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@store');
+Route::delete('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@destroy');
+
 Route::post('/replies/{reply}/favourites', 'FavouritesController@store');
 Route::delete('/replies/{reply}/favourites', 'FavouritesController@destroy');
 
