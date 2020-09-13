@@ -27,6 +27,9 @@
                         <a class="dropdown-item" href="/threads?popular=1">
                             {{ __('Popular threads') }}
                         </a>
+                        <a class="dropdown-item" href="/threads?unanswered=1">
+                            {{ __('Unanswered threads') }}
+                        </a>
                     </div>
                 </li>
                 {{-- <li class="nav-item">
