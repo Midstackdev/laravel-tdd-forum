@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\ThreadHasNewReply;
 use App\Models\Traits\RecordsActivity;
 use App\Notifications\ThreadWasUpdated;
 use Illuminate\Database\Eloquent\Model;
@@ -55,23 +56,19 @@ class Thread extends Model
     {
         $reply = $this->replies()->create($reply);
 
-        $this->subscriptions->where('user_id', '!=', $reply->user_id)
-        // ->filter(function ($subscription) use ($reply) {
-        //     return $subscription->user_id != $reply->user_id;
-        // })
-        ->each->notify($reply);
+        // event(new ThreadHasNewReply($this, $reply));
 
-        // ->each(function ($subscription) use ($reply) {
-        //     $subscription->user->notify(new ThreadWasUpdated($this, $reply));
-        // });
-
-        // foreach($this->subscriptions as $subscription) {
-        //     if($subscription->user_id != $reply->user_id) {
-        //         $subscription->user->notify(new ThreadWasUpdated($this, $reply));
-        //     }
-        // }
+        $this->notifySubscribers($reply);
 
         return $reply;
+    }
+
+    public function notifySubscribers($reply)
+    {
+        $this->subscriptions
+            ->where('user_id', '!=', $reply->user_id)
+            ->each
+            ->notify($reply);
     }
 
     public function getRepliesCountAttribute()
