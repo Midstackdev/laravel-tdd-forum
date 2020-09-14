@@ -55,11 +55,12 @@ class Thread extends Model
     {
         $reply = $this->replies()->create($reply);
 
-        $this->subscriptions->filter(function ($subscription) use ($reply) {
-            return $subscription->user_id != $reply->user_id;
-        })
+        $this->subscriptions->where('user_id', '!=', $reply->user_id)
+        // ->filter(function ($subscription) use ($reply) {
+        //     return $subscription->user_id != $reply->user_id;
+        // })
         ->each->notify($reply);
-        
+
         // ->each(function ($subscription) use ($reply) {
         //     $subscription->user->notify(new ThreadWasUpdated($this, $reply));
         // });
