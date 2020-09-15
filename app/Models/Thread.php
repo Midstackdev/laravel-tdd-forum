@@ -109,4 +109,13 @@ class Thread extends Model
     {
         return $this->subscriptions()->where('user_id', auth()->id())->exists();
     }
+
+    public function hasUpdatesFor($user)
+    {
+        $user = $user ?: auth()->user();
+
+        $key = $user->visitedThreadCacheKey($this);
+
+        return $this->updated_at > cache($key);
+    }
 }
