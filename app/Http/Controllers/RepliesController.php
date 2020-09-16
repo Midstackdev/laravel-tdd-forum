@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Reply;
 use App\Models\Thread;
-use App\Services\Spam\Spam;
+use App\Rules\SpamFree;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RepliesController extends Controller
 {
@@ -21,9 +22,15 @@ class RepliesController extends Controller
 
     public function store($channelId, Thread $thread)
     {
+        if(Gate::denies('create', new Reply)) {
+            return response('You are posting too frequently, take a break.', 422);
+        }
+
         try {
-            
-        	$this->validateReply();
+
+        	$this->validate(request(), [
+                'body' => ['required', new SpamFree]
+            ]);
 
         	$reply = $thread->addReply([
         		'body' => request('body'),
@@ -46,7 +53,9 @@ class RepliesController extends Controller
             
             $this->authorize('update', $reply);
 
-            $this->validateReply();
+            $this->validate(request(), [
+                'body' => ['required', new SpamFree]
+            ]);
 
             $reply->update(request(['body']));
         } catch (\Exception $e) {
@@ -70,9 +79,9 @@ class RepliesController extends Controller
     protected function validateReply()
     {
         $this->validate(request(), [
-            'body' => 'required'
+            'body' => 'required|spamfree'
         ]);
 
-        resolve(Spam::class)->detect(request('body'));
+        // resolve(Spam::class)->detect(request('body'));
     }
 }
