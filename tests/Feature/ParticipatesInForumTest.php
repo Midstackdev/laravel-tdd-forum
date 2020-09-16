@@ -91,6 +91,7 @@ class ParticipatesInForumTest extends TestCase
             ->patch("/replies/{$reply->id}")
             ->assertStatus(403);
     }
+
     /** @test */
     public function authorized_users_can_update_replies()
     {
@@ -102,5 +103,20 @@ class ParticipatesInForumTest extends TestCase
         $this->patch("/replies/{$reply->id}", ['body' => $updatedReply]);
 
         $this->assertDatabaseHas('replies', ['id' => $reply->id, 'body' => $updatedReply]);
+    }
+
+    /** @test */
+    public function replies_that_contain_spam_may_not_be_created()
+    {
+        $this->signIn();
+        $this->withoutExceptionHandling();
+
+        $thread = create('App\Models\Thread');
+        $reply = make('App\Models\Reply', ['body' => 'Yahoo Customer Support']);
+
+        $this->expectException(\Exception::class);
+
+        $this->post($thread->path(). '/replies', $reply->toArray());
+
     }
 }
