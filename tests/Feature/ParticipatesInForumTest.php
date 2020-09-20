@@ -49,8 +49,8 @@ class ParticipatesInForumTest extends TestCase
 
         $reply = make('App\Models\Reply', ['body' => null ]);
         $this->post($thread->path(). '/replies', $reply->toArray())
-                // ->assertSessionHasErrors('body');
-                ->assertStatus(422);
+                ->assertSessionHasErrors('body');
+                // ->assertStatus(422);
     }
 
     /** @test */
@@ -117,7 +117,9 @@ class ParticipatesInForumTest extends TestCase
 
         // $this->expectException(\Exception::class);
 
-        $this->post($thread->path(). '/replies', $reply->toArray())->assertStatus(422);
+        $this->post($thread->path(). '/replies', $reply->toArray())
+            // ->assertStatus(422);
+        ->assertSessionHasErrors('body');
 
     }
 
@@ -131,7 +133,7 @@ class ParticipatesInForumTest extends TestCase
 
         $this->post($thread->path(). '/replies', $reply->toArray())->assertStatus(201);
 
-        $this->post($thread->path(). '/replies', $reply->toArray())->assertStatus(422);
+        $this->post($thread->path(). '/replies', $reply->toArray())->assertStatus(429);
 
     }
 }
