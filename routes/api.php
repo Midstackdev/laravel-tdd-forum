@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/users', 'Api\UsersController@index');
+Route::post('/users/{user}/avatar', 'Api\UserAvatarController@store')->name('avatar.path');
