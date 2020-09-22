@@ -33,7 +33,7 @@ class AddAvatarTest extends TestCase
     }
 
     /** @test */
-    public function a_user_may_add_an_avatar_to_tgeir_profile()
+    public function a_user_may_add_an_avatar_to_their_profile()
     {
         // $this->withoutExceptionHandling();
         $this->signIn();
@@ -44,7 +44,7 @@ class AddAvatarTest extends TestCase
             'avatar' => $file = UploadedFile::fake()->image('avatar.jpg')
         ]);
 
-        $this->assertEquals('avatars/' . $file->hashName(), auth()->user()->avatar_path);
+        $this->assertEquals(asset('avatars/' . $file->hashName()), auth()->user()->avatar_path);
 
         Storage::disk('public')->assertExists('avatars/' . $file->hashName());
     }
