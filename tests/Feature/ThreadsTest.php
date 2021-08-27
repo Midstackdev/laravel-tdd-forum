@@ -128,17 +128,28 @@ class ThreadsTest extends TestCase
     }
 
     /** @test */
-    public function a_thread_records_each_visit()
+    // public function a_thread_records_each_visit()
+    // {
+    //     $thread = make('App\Models\Thread', ['id' => 1]);
+    //     $thread->visits()->reset();
+    //     $this->assertSame(0, $thread->visits()->count()); 
+
+    //     $thread->visits()->record();
+    //     $this->assertEquals(1, $thread->visits()->count()); 
+
+    //     $thread->visits()->record();
+    //     $this->assertEquals(2, $thread->visits()->count());   
+    // }
+
+    /** @test */
+    public function we_record_a_new_visit_each_time_the_thread_is_read()
     {
-        $thread = make('App\Models\Thread', ['id' => 1]);
-        $thread->visits()->reset();
-        $this->assertSame(0, $thread->visits()->count()); 
+        $thread = create('App\Models\Thread');
+        $this->assertSame(0, $thread->visits);
 
-        $thread->visits()->record();
-        $this->assertEquals(1, $thread->visits()->count()); 
-
-        $thread->visits()->record();
-        $this->assertEquals(2, $thread->visits()->count());   
+        $this->call('GET', $thread->path()); 
+        // dd($thread);
+        $this->assertEquals(1, $thread->fresh()->visits);
     }
 
 

@@ -29,7 +29,7 @@
                 </article>
         </div>
         <div class="card-footer text-muted">
-            {{ $thread->visits()->count() }} Visits
+            {{ $thread->visits }} Visits
         </div>
     </div> 
 @empty
