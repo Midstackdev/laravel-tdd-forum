@@ -28,6 +28,9 @@
                    <div class="body"> {{ $thread->body }} </div>
                 </article>
         </div>
+        <div class="card-footer text-muted">
+            {{ $thread->visits() }} Visits
+        </div>
     </div> 
 @empty
     <p class="lead">There are no relevant results at this time.</p>

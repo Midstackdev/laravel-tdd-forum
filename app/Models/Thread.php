@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Events\ThreadHasNewReply;
 use App\Models\Traits\RecordsActivity;
+use App\Traits\RecordsVisits;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis;
 
 class Thread extends Model
 {
-    use RecordsActivity;
+    use RecordsActivity, RecordsVisits;
 
     protected $guarded = [];
 
@@ -115,4 +117,5 @@ class Thread extends Model
 
         return $this->updated_at > cache($key);
     }
+
 }
